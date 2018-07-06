@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+  <title>ShooplingList</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+</head>
+<boby>
+  <nav>
+    <div class="nav-wrapper">
+      <a class="brand-logo center">Shoppinglist</a>
+    </div>
+  </nav>
+  <ul></ul>
+  <script>
+  const electron = require('electron');
+  const {ipcRenderer} = electron;
+  const ul = document.querySelector('ul');
+
+  // Add item
+  ipcRenderer.on('item:add', function(e, item){
+    ul.className = 'collection';
+    const li = document.createElement('li');
+    li.className = 'collection-item';
+    const itemText = document.createTextNode(item);
+    li.appendChild(itemText);
+    ul.appendChild(li);
+  })
+
+  // Clear items
+  ipcRenderer.on('item:clear', function(){
+    ul.innerHTML = '';
+  })
+
+  //Remove Items
+  ul.addEventListener('dblclick', removeItem);
+  function removeItem(e){
+    e.target.remove();
+    if(ul.children.length == 0){
+      ul.className = '';
+    }
+  }
+
+  </script>
+  <div id=holder>
+    Drag your file here.
+  </div>
+  <script>
+    document.addEventListener('drop', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+
+      for (let f of e.dataTransfer.files) {
+        console.log('File(s) you dragged here: ', f.path)
+      }
+    });
+      document.addEventListener('dragover', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+      });
+  </script>
+</boby>
+</html>
